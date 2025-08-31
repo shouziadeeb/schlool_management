@@ -1,26 +1,16 @@
 "use client";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
-
-type FormValues = {
-  name: string;
-  address: string;
-  city: string;
-  state: string;
-  contact: string;
-  email_id: string;
-  image: FileList;
-};
 
 export default function AddSchool() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>();
-  const [message, setMessage] = useState<string>("");
+  } = useForm();
+  const [message, setMessage] = useState("");
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const onSubmit = async (data) => {
     if (!data.image || data.image.length === 0) {
       setMessage("Please upload an image");
       return;
@@ -30,7 +20,7 @@ export default function AddSchool() {
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
       if (key !== "image") {
-        formData.append(key, (data as Record<string, any>)[key]);
+        formData.append(key, data[key]); // ✅ removed TypeScript casting
       }
     });
     formData.append("image", data.image[0]);
@@ -49,7 +39,7 @@ export default function AddSchool() {
   };
 
   return (
-    <div className="flex justify-center items-center  p-4">
+    <div className="flex justify-center items-center p-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white p-6 rounded-lg shadow-md w-full max-w-md space-y-4"
@@ -126,7 +116,7 @@ export default function AddSchool() {
           {...register("image", {
             validate: (files) => files?.length > 0 || "Please upload an image",
           })}
-          className="w-full cursor-pointer "
+          className="w-full cursor-pointer"
         />
         {errors.image && <p className="text-red-500">{errors.image.message}</p>}
 

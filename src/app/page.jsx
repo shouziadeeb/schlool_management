@@ -4,7 +4,7 @@ import AddSchool from "../app/components/AddSchool";
 import ShowSchools from "../app/components/ShowSchools";
 
 export default function HomePage() {
-  const [isToggle, setIsToggle] = useState<boolean>(true);
+  const [isToggle, setIsToggle] = useState(true);
 
   return (
     <div className="bg-blue-100 flex flex-col justify-center items-center w-full md:h-screen py-6">

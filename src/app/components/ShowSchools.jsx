@@ -2,19 +2,8 @@
 "use client";
 import { useEffect, useState } from "react";
 
-interface School {
-  id: number;
-  name: string;
-  address: string;
-  city: string;
-  state: string;
-  contact: string;
-  email_id: string;
-  image: string;
-}
-
 export default function ShowSchools() {
-  const [schools, setSchools] = useState<School[]>([]);
+  const [schools, setSchools] = useState([]);
 
   useEffect(() => {
     fetch("/api/getSchools")
