@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
-import AddSchool from "../app/components/AddSchool";
-import ShowSchools from "../app/components/ShowSchools";
+import AddSchool from "./components/AddSchool";
+import ShowSchools from "./components/ShowSchools";
+// import AddSchool from "../app/components/AddSchool";
+// import ShowSchools from "../app/components/ShowSchools";
 
 export default function HomePage() {
   const [isToggle, setIsToggle] = useState(true);

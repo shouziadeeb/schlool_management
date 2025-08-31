@@ -9,18 +9,20 @@ export default function AddSchool() {
     formState: { errors },
   } = useForm();
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false); // ✅ loading state
 
   const onSubmit = async (data) => {
     if (!data.image || data.image.length === 0) {
       setMessage("Please upload an image");
       return;
     }
-    setMessage(""); // clear error if file is selected
+    setMessage(""); 
+    setLoading(true); // ✅ start loading
 
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
       if (key !== "image") {
-        formData.append(key, data[key]); // ✅ removed TypeScript casting
+        formData.append(key, data[key]);
       }
     });
     formData.append("image", data.image[0]);
@@ -35,6 +37,8 @@ export default function AddSchool() {
       setMessage(result.message || result.error);
     } catch (err) {
       setMessage("Something went wrong!");
+    } finally {
+      setLoading(false); // ✅ stop loading
     }
   };
 
@@ -123,9 +127,14 @@ export default function AddSchool() {
         {/* Submit */}
         <button
           type="submit"
-          className="bg-blue-600 text-white w-full py-2 rounded"
+          className="bg-blue-600 flex justify-center items-center cursor-pointer text-white w-full py-2 rounded disabled:opacity-70"
+          disabled={loading} // ✅ disable button while loading
         >
-          Submit
+          {loading ? (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            "Submit"
+          )}
         </button>
 
         {/* Message */}

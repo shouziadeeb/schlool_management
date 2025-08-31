@@ -22,10 +22,12 @@ export default function ShowSchools() {
         {schools.map((school) => (
           <div key={school.id} className="bg-white rounded-lg shadow p-4">
             <img
-              src={`http://localhost:3000/uploads/${school.image}`}
+              src={school.image}
               alt={school.name}
-              className="w-full h-40 object-cover rounded"
+              className="w-full h-40"
+              
             />
+
             <h3 className="text-lg font-bold mt-2">{school.name}</h3>
             <p>{school.address}</p>
             <p className="text-gray-600">{school.city}</p>

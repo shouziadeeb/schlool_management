@@ -1,6 +1,12 @@
 import db from "../../lib/db.js";
-import path from 'path'
-import fs from 'fs'
+import { v2 as cloudinary } from "cloudinary";
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(req) {
   try {
@@ -12,28 +18,30 @@ export async function POST(req) {
     const contact = formData.get("contact");
     const email = formData.get("email_id");
     const image = formData.get("image");
-    let imageName = null;
-
-    console.log(image,'image', image.name)
+    let imageUrl = null;
 
     if (image && image.name) {
-      // Generate a unique filename (to avoid conflicts)
-      imageName = Date.now() + "-" + image.name;
-
-      // Save the file in public/uploads
-      const uploadDir = path.join(process.cwd(), "public", "uploads");
-
-      // Ensure folder exists
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-      }
-
       const buffer = Buffer.from(await image.arrayBuffer());
-      fs.writeFileSync(path.join(uploadDir, imageName), buffer);
+
+      // Upload to Cloudinary
+      const uploadRes = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "schools" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(buffer);
+      });
+
+      imageUrl = uploadRes.secure_url; // Cloudinary hosted URL
     }
+
+    // Save record in MySQL
     const [result] = await db.query(
       "INSERT INTO School (name, address, city, state, contact, email_id, image) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [name, address, city, state, contact, email, imageName]
+      [name, address, city, state, contact, email, imageUrl]
     );
 
     return new Response(
