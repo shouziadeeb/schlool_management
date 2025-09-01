@@ -16,7 +16,7 @@ export default function ShowSchools() {
   }, []);
 
   return (
-    <div className="p-8 bg-gray-100 w-[90%] shadow-sm">
+    <div className="p-8 bg-gray-100 w-[90%] shadow-sm h-full">
       <h2 className="text-2xl font-bold mb-6 text-center">Schools List</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {schools.map((school) => (
